@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import cookie from "react-cookies";
 
 // @material-ui/core components
+import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
@@ -26,6 +27,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import useStyles from "./styles";
 
 import axios from "axios";
+import ButtonGroup from "antd/es/button/button-group";
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 // const server = "http://baicao.zjuers.com:6636"
@@ -42,7 +44,6 @@ const Navbar = () => {
   const [openProfile, setOpenProfile] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [remember, setRemember] = React.useState(cookie.load("remember"));
-  const [ready, setReady] = React.useState(false);
   const initialFormState = {
     email: cookie.load("account") ? cookie.load("account") : "",
     password:
@@ -51,19 +52,10 @@ const Navbar = () => {
     email_check: "",
     password_check: "",
     username_check: "",
-    oldpassword: "",
-    newpassword: "",
-    newpassword_check: "",
-    checksum: "",
-    checksum_check: "",
   };
   const [snackbar, setSnackbar] = React.useState({
     logDone: false,
     regDone: false,
-    modDone: false,
-    emailDone: false,
-    noCode: false,
-    findDone: false,
     logOut: false,
   });
   function closeSnackbar(name) {
@@ -174,6 +166,10 @@ const Navbar = () => {
     }
     if (formData.username === "") {
       uc = "用户名不能为空。";
+    } else if (
+      !/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/.test(formData.username)
+    ) {
+      uc = "用户名格式错误。";
     }
     if (formData.password === "") {
       pc = "密码不能为空。";
@@ -213,161 +209,6 @@ const Navbar = () => {
       });
     }
   }
-  const handleSubmitChangePassword = () => {
-    let ec = "";
-    let pc = "";
-    let npc = "";
-    if (formData.email === "") {
-      ec = "邮箱不能为空。";
-    } else if (
-      !/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(
-        formData.email
-      )
-    ) {
-      ec = "邮箱格式错误。";
-    }
-    if (formData.oldpassword === "") {
-      pc = "旧密码不能为空。";
-    }
-    if (formData.newpassword === "") {
-      npc = "新密码不能为空。";
-    } else if (
-      !/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/.test(formData.newpassword)
-    ) {
-      npc = "新密码格式错误。密码必须包含6~20个字符，有且仅由数字与字母构成。";
-    }
-    setFormData({
-      ...formData,
-      email_check: ec,
-      password_check: pc,
-      newpassword_check: npc,
-    });
-    //初步验证完成，连接后端，尝试修改密码
-    if (ec === "" && pc === "" && npc === "") {
-      change();
-    }
-  };
-  async function change() {
-    let ec = "";
-    let pc = "";
-    let data = {
-      Email: formData.email,
-      Password: formData.oldpassword,
-      Newpassword: formData.newpassword
-    };
-    console.log(data);
-    //let res = { data: "修改成功" };
-    let res = await axios.post(`${server}/modifyPassword/`, data);
-    if (res.data === "修改成功") {
-      handleToLogin();
-      setFormData({ ...formData, password: "" });
-      setAccount({ ...account, email: "", username: "" });
-      cookie.remove("username", { path: "/" });
-      if (cookie.load("password")) {
-        cookie.remove("password", { path: "/" });
-      }
-      setSnackbar({ ...snackbar, modDone: true });
-    } else {
-      if (res.data === "密码错误") {
-        pc = "密码错误。";
-      } else {
-        ec = "该邮箱未注册。";
-      }
-      setFormData({
-        ...formData,
-        email_check: ec,
-        password_check: pc,
-        newpassword_check: "",
-      });
-    }
-  }
-  const handleSubmitSendEmail = () => {
-    if (formData.email === "") {
-      setFormData({ ...formData, email_check: "邮箱不能为空。" });
-    } else if (
-      !/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(
-        formData.email
-      )
-    ) {
-      setFormData({ ...formData, email_check: "邮箱格式错误。" });
-    } else {
-      sendemail();
-    }    
-  };
-  async function sendemail() {
-    // let res = {data: "邮箱已注册"};
-    let res = await axios.post(`${server}/find_pwd/`, { Email: formData.email });
-    if (res.data === "邮箱未注册") {
-      setFormData({ ...formData, email_check: "该邮箱未注册。"});
-    } else {
-      setReady(true);
-      setFormData({ ...formData, email_check: ""});
-      setSnackbar({ ...snackbar, emailDone: true });
-    }  
-  }
-  const handleSubmitSetPassword = () => {
-    if (ready) {
-      let ec = "";
-      let cc = "";
-      let npc = "";
-      if (formData.email === "") {
-        ec = "邮箱不能为空。";
-      } else if (
-        !/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(
-          formData.email
-        )
-      ) {
-        ec = "邮箱格式错误。";
-      }
-      if (formData.checksum === "") {
-        cc = "请输入验证码。";
-      }
-      if (formData.newpassword === "") {
-        npc = "新密码不能为空。";
-      } else if (
-        !/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/.test(formData.newpassword)
-      ) {
-        npc = "新密码格式错误。密码必须包含6~20个字符，有且仅由数字与字母构成。";
-      }
-      setFormData({
-        ...formData,
-        email_check: ec,
-        checksum_check: cc,
-        newpassword_check: npc,
-      });
-      if (ec === "" && cc === "" && npc === "") {
-        setpassword();
-      }
-    } else {
-      setSnackbar({ ...snackbar, noCode: true });
-    }
-  };
-  async function setpassword() {
-    let ec = "";
-    let cc = "";
-    let data = {
-      Email: formData.email,
-      Checksum: formData.checksum,
-      Newpassword: formData.newpassword
-    };
-    // let res = {data: "设置成功"};
-    let res = await axios.post(`${server}/verify_code/`, data);
-    if (res.data === "设置成功") {
-      handleToLogin();
-      setFormData({ ...formData, email: "", password: "" });
-      setSnackbar({ ...snackbar, findDone: true });
-    } else {
-      if (res.data === "邮箱未注册") {
-        ec = "该邮箱未注册。";
-      } else if (res.data === "邮箱无验证码") {
-        ec = "该邮箱并未可供修改密码的验证码。";
-      } else {
-        cc = "验证码错误。";
-      }
-      setFormData({ ...formData, email_check: ec, checksum_check: cc });
-    }
-    
-  }
   const handleRemember = (e) => {
     let tmp = e.target.checked;
     setRemember(tmp);
@@ -385,27 +226,39 @@ const Navbar = () => {
     setFormData({ ...formData, email: "", password: "" });
     setOp("register");
   };
-  const handleToForgetPassword = () => {
-    setFormData(initialFormState);
-    setOp("forgetpassword");
-  };
-  const handleToChangePassword = () => {
-    setOpenProfile(false);
-    setFormData(initialFormState);
-    setOp("changepassword");
-    setOpenDialog(true);
-  };
   return (
-    <div className={classes.navbar}>
-      <div className={classes.emptydiv} />
-      <div className={classes.manager}>
+    <AppBar position="static" className={classes.navbar}>
+      <div className={classes.mainDiv}>
+        <Typography className={classes.title} variant="h6" noWrap>
+          LetsLabel
+        </Typography>
+        <ButtonGroup variant="text" color="secondary" aria-label="text primary button group">
+          <Button
+            className={classes.button}
+            onClick={() => { navigate("/"); }}
+          >
+            任务广场
+          </Button>
+          <Button
+            className={classes.button}
+            onClick={() => { navigate("/post"); }}>
+            我发布的
+          </Button>
+          <Button
+            className={classes.button}
+            onClick={() => { navigate("/submit"); }}>
+            我领取的
+          </Button>
+        </ButtonGroup>
+      </div>
+      <div>
         <Button
-          color="primary"
-          variant="outlined"
+          variant="text"
           startIcon={<AccountCircle />}
           aria-owns={openProfile ? "profile-menu-list-grow" : null}
           aria-haspopup="true"
           onClick={handleClickButton}
+          className={classes.button}
         >
           {account.email === "" ? "登录" : account.username}
         </Button>
@@ -427,32 +280,7 @@ const Navbar = () => {
                   <ClickAwayListener onClickAway={handleCloseProfile}>  
                     <MenuList role="menu">
                       <MenuItem
-                        onClick={() => {
-                          setOpenProfile(false);
-                          navigate('/');
-                        }}
-                        className={classes.dropdownItem}
-                      >
-                        继续搜索
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          setOpenProfile(false);
-                          navigate('/user');
-                        }}
-                        className={classes.dropdownItem}
-                      >
-                        我的主页
-                      </MenuItem>
-                      <MenuItem
-                        onClick={handleToChangePassword}
-                        className={classes.dropdownItem}
-                      >
-                        修改密码
-                      </MenuItem>
-                      <MenuItem
                         onClick={handleLogout}
-                        className={classes.dropdownItem}
                       >
                         登出
                       </MenuItem>
@@ -479,6 +307,7 @@ const Navbar = () => {
             <DialogContent className={classes.form_content}>
               <TextField
                 error={formData.email_check !== ""}
+                color="secondary"
                 variant="outlined"
                 margin="normal"
                 required
@@ -494,6 +323,7 @@ const Navbar = () => {
               />
               <TextField
                 error={formData.password_check !== ""}
+                color="secondary"
                 variant="outlined"
                 margin="normal"
                 required
@@ -511,7 +341,7 @@ const Navbar = () => {
                 control={
                   <Checkbox 
                     name="remember" 
-                    color="primary"
+                    color="secondary"
                     checked={remember}
                     onChange={handleRemember} 
                     />
@@ -521,20 +351,15 @@ const Navbar = () => {
               <Button
                 fullWidth
                 variant="contained"
-                color="primary"
+                color="secondary"
                 className={classes.form_button}
                 onClick={handleSubmitLogin}
               >
                 确定
               </Button>
               <Grid container className={classes.form_option}>
-                <Grid item xs>
-                  <Link onClick={handleToForgetPassword} variant="body2">
-                    忘记密码？
-                  </Link>
-                </Grid>
                 <Grid item>
-                  <Link onClick={handleToRegister} variant="body2">
+                  <Link onClick={handleToRegister}  color="secondary" variant="body2">
                     注册账号
                   </Link>
                 </Grid>
@@ -555,6 +380,7 @@ const Navbar = () => {
                   formData.email_check !== "" &&
                   formData.email_check !== "正确。"
                 }
+                color="secondary"
                 variant="outlined"
                 margin="normal"
                 required
@@ -573,6 +399,7 @@ const Navbar = () => {
                   formData.username_check !== "" &&
                   formData.username_check !== "正确。"
                 }
+                color="secondary"
                 variant="outlined"
                 margin="normal"
                 required
@@ -590,6 +417,7 @@ const Navbar = () => {
                   formData.password_check !== "" &&
                   formData.password_check !== "正确。"
                 }
+                color="secondary"
                 variant="outlined"
                 margin="normal"
                 required
@@ -611,7 +439,7 @@ const Navbar = () => {
               <Button
                 fullWidth
                 variant="contained"
-                color="primary"
+                color="secondary"
                 className={classes.form_button}
                 onClick={handleSubmitRegister}
               >
@@ -619,164 +447,8 @@ const Navbar = () => {
               </Button>
               <Grid container className={classes.form_option}>
                 <Grid item>
-                  <Link onClick={handleToLogin} variant="body2">
+                  <Link onClick={handleToLogin} color="secondary" variant="body2">
                     已有账号？登录
-                  </Link>
-                </Grid>
-              </Grid>
-            </DialogContent>
-          </div>
-        )}
-        {op === "changepassword" && (
-          <div>
-            <DialogTitle id="form-dialog-title" className={classes.form_head}>
-              <Typography component="h1" variant="h5">
-                修改密码
-              </Typography>
-            </DialogTitle>
-            <DialogContent className={classes.form_content}>
-              <TextField
-                error={ formData.email_check !== "" }
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="邮箱"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={formData.email}
-                helperText={formData.email_check}
-                onChange={handleInputChange}
-              />
-              <TextField
-                error={ formData.password_check !== "" }
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="oldpassword"
-                label="旧密码"
-                type="password"
-                name="oldpassword"
-                autoComplete="oldpassword"
-                autoFocus
-                value={formData.oldpassword}
-                helperText={formData.password_check}
-                onChange={handleInputChange}
-              />
-              <TextField
-                error={ formData.newpassword_check !== "" }
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="newpassword"
-                label="新密码"
-                type="password"
-                id="newpassword"
-                autoComplete="newpassword"
-                value={formData.newpassword}
-                helperText={ formData.newpassword_check }
-                onChange={handleInputChange}
-              />
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.form_button}
-                onClick={handleSubmitChangePassword}
-              >
-                确定
-              </Button>
-              <Grid container className={classes.form_option}>
-              </Grid>
-            </DialogContent>
-          </div>
-        )}
-        {op === "forgetpassword" && (
-          <div>
-            <DialogTitle id="form-dialog-title" className={classes.form_head}>
-              <Typography component="h1" variant="h5">
-                找回密码
-              </Typography>
-            </DialogTitle>
-            <DialogContent className={classes.form_content}>
-              <div className={classes.form_email}>
-                <TextField
-                  error={formData.email_check !== ""}
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="邮箱"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  value={formData.email}
-                  helperText={formData.email_check}
-                  className={classes.form_email_input}
-                  onChange={handleInputChange}
-                />
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.form_email_button}
-                  onClick={handleSubmitSendEmail}
-                >
-                  发送验证码
-                </Button>
-              </div>
-              <TextField
-                error={formData.checksum_check !== ""}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="checksum"
-                label="验证码"
-                id="checksum"
-                autoComplete="checksum"
-                value={formData.checksum}
-                helperText={formData.checksum_check}
-                onChange={handleInputChange}
-              />
-              <TextField
-                error={formData.newpassword_check !== ""}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="newpassword"
-                label="密码"
-                type="password"
-                id="newpassword"
-                autoComplete="newassword"
-                value={formData.newpassword}
-                helperText={formData.newpassword_check}
-                onChange={handleInputChange}
-              />
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.form_button}
-                onClick={handleSubmitSetPassword}
-              >
-                确定
-              </Button>
-              <Grid container className={classes.form_option}>
-                <Grid item xs>
-                  <Link onClick={handleToLogin} variant="body2">
-                    登录
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link onClick={handleToRegister} variant="body2">
-                    注册账号
                   </Link>
                 </Grid>
               </Grid>
@@ -805,35 +477,7 @@ const Navbar = () => {
         open={snackbar.regDone}
         close={closeSnackbar}
       />
-      <CustomizedSnackbars
-        name="modDone"
-        message="密码修改成功！请进行登录。"
-        type="success"
-        open={snackbar.modDone}
-        close={closeSnackbar}
-      />
-      <CustomizedSnackbars
-        name="emailDone"
-        message="验证码已发送。"
-        type="success"
-        open={snackbar.emailDone}
-        close={closeSnackbar}
-      />
-      <CustomizedSnackbars
-        name="noCode"
-        message="请先向您的邮箱发送验证码。"
-        type="error"
-        open={snackbar.noCode}
-        close={closeSnackbar}
-      />
-      <CustomizedSnackbars
-        name="findDone"
-        message="新密码设置成功！请进行登录。"
-        type="success"
-        open={snackbar.findDone}
-        close={closeSnackbar}
-      />
-    </div>
+    </AppBar>
   );
 }
 

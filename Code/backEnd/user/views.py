@@ -6,17 +6,19 @@ import uuid
 
 # Create your views here.
 from . import models
-def good(request):
-    print("123")
-    return HttpResponse("打印成功！")
+from task.models import models as task
+
 def register(request):
     if request.body :
         data = json.loads(request.body)
     else :
         return HttpResponse("失败")
     checkEmail = list(models.User.objects.values('Email').filter(Email = data['Email']))
+    checkUsername = list(models.User.objects.values('Name').filter(Name = data['Name']))
     if checkEmail:
         return HttpResponse("邮箱已被注册")
+    elif checkUsername:
+        return HttpResponse("用户名已被占用")
     else:
         data['UID'] = uuid.uuid4()
         models.User.objects.create(**data)
@@ -40,3 +42,4 @@ def getUserName(request):
         return HttpResponse(loginUser[0]['Name'])
     else:
         return HttpResponse("没这个人")
+

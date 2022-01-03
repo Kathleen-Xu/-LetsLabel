@@ -1,12 +1,24 @@
 import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(() => ({
   navbar: {
-    display: "flex", 
-    paddingRight: "5px",  
-    color: "green", 
+    display: "flex",
+    flexDirection: "row",
+    padding: "10px 10px",
   },
-  emptydiv: {
+  mainDiv: {
     flex: "1",
+    display: "flex",
+    flexDirection: "row",
+    margin: "0 5px",
+  },
+  title: {
+    margin: "3px 80px 0 40px",
+  },
+  button: {
+    fontSize: "0.925em",
+    fontWeight: "600",
+    marginLeft: "16px",
+    marginRight: "16px",
   },
   poppers: {
     margin: "2px",

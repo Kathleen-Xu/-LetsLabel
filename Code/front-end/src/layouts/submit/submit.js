@@ -3,15 +3,15 @@ import useStyles from "./styles";
 import {useNavigate} from "react-router-dom";
 
 
-const Detail = () => {
+const Submit = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
   return (
     <div className={classes.root}>
-      detail
+      submit
     </div>
   );
 }
 
-export default Detail;
+export default Submit;
