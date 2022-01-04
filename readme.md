@@ -82,10 +82,10 @@ $ django manage.py runserver
 注册使用邮箱进行注册，用户和密码需要6字节以上，用户名仅包含且必须包含数字和字母6-20位，密码仅包含且必须**同时**包含数字和字母6-20位。
 
 ###### 注册
-<img src="C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104173804107.png" alt="register" style="width: 50%; align: center;">
+<img src="./Screenshot/image-20220104173804107.png" alt="register" style="width: 50%; align: center;">
 
 ###### 登录
-<img src="C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104173821026.png" alt="register" style="width: 50%; align: center;">
+<img src="./Screenshot/image-20220104173821026.png" alt="register" style="width: 50%; align: center;">
 
 
 
@@ -109,15 +109,15 @@ $ django manage.py runserver
 
 ###### 图片上传
 
-<img src="C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104212123770.png" alt="register" style="width: 100%; align: center;">
+<img src="./Screenshot/image-20220104212123770.png" alt="register" style="width: 100%; align: center;">
 
 ###### 视频提取帧后上传
 
-<img src="C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104175117043.png" alt="register" style="width: 100%; align: center;">
+<img src="./Screenshot/image-20220104175117043.png" alt="register" style="width: 100%; align: center;">
 
 ###### 任务发布成功
 
-<img src="C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104211950899.png" alt="register" style="width: 100%; align: center;">
+<img src="./Screenshot/image-20220104211950899.png" alt="register" style="width: 100%; align: center;">
 
 
 
@@ -129,23 +129,23 @@ $ django manage.py runserver
 
 单击一条任务，卡片展开，显示任务所携带的图片栏（**若该任务刚刚发布，可能由于网络原因图片加载较慢或者错乱，稍等片刻即可**）。
 
-![image-20220104221705646](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104221705646.png)
+![image-20220104221705646](./Screenshot/image-20220104221705646.png)
 
 任务一般有3种状态：
 
 1. 尚无标注方案：所有用户都可以尝试标注。
 
-![image-20220104221955938](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104221955938.png)
+![image-20220104221955938](./Screenshot/image-20220104221955938.png)
 
 2. 已有标注方案但发布者尚未复核：发布者可以进行复核；所有用户可以进行导出。
 
-![image-20220104222500300](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104222500300.png)
+![image-20220104222500300](./Screenshot/image-20220104222500300.png)
 
 3. 已有标注方案且发布者已经复核：所有用户可以看到复核结果，也可以进行导出。
 
-![image-20220104222703601](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104222703601.png)
+![image-20220104222703601](./Screenshot/image-20220104222703601.png)
 
-![image-20220104222613319](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104222613319.png)
+![image-20220104222613319](./Screenshot/image-20220104222613319.png)
 
 
 
@@ -157,7 +157,7 @@ $ django manage.py runserver
 
 首先为标注面板添加标注所需用到的Class和Tag。**请注意：一经点击<u>开始标注</u>，Class和Tag将无法追加。**
 
-![image-20220104214619004](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104214619004.png)
+![image-20220104214619004](./Screenshot/image-20220104214619004.png)
 
 ###### 开始标注
 
@@ -174,11 +174,11 @@ $ django manage.py runserver
 
 **【由于本项目选择的组件有一些小问题，目前并不支持右上角的CLONE/SETTINGS，和右下角的History。此外，在为删除标注的Tag至0个时，组件会因为报错而卡顿。如遇此种情况，可以刷新标注界面，重新进行标注。另一种解决方法涉及到修改依赖包中组件的源代码，已在开头的运行说明中提出。】**
 
-![image-20220104215056163](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104215056163.png)
+![image-20220104215056163](./Screenshot/image-20220104215056163.png)
 
-![image-20220104220145017](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104220145017.png)
+![image-20220104220145017](./Screenshot/image-20220104220145017.png)
 
-![image-20220104223618576](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104223618576.png)
+![image-20220104223618576](./Screenshot/image-20220104223618576.png)
 
 ###### 提交标注方案
 
@@ -186,9 +186,9 @@ $ django manage.py runserver
 
 页面会自动跳转到“我提交的”页面，可以看到提交记录。
 
-![image-20220104221244230](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104221244230.png)
+![image-20220104221244230](./Screenshot/image-20220104221244230.png)
 
-![image-20220104221547603](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104221547603.png)
+![image-20220104221547603](./Screenshot/image-20220104221547603.png)
 
 
 
@@ -196,7 +196,7 @@ $ django manage.py runserver
 
 在有用户提交了标注方案后，任务发布者可以对该标注方案进行复核，选择通过或者不通过。（本项目暂不支持复现标注信息，用户可以通过导出进行自我判断。）
 
-![image-20220104222531021](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104222531021.png)
+![image-20220104222531021](./Screenshot/image-20220104222531021.png)
 
 
 
@@ -204,23 +204,23 @@ $ django manage.py runserver
 
 选择一个任务的标注方案，选择导出格式进行导出。
 
-![image-20220104225724812](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104225724812.png)
+![image-20220104225724812](./Screenshot/image-20220104225724812.png)
 
 
 
 - COCO：导出为json格式，所有图片都包含在内。
 
-![image-20220104230409932](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104230409932.png)
+![image-20220104230409932](./Screenshot/image-20220104230409932.png)
 
-![image-20220104231750184](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104231750184.png)
+![image-20220104231750184](./Screenshot/image-20220104231750184.png)
 
 
 
 - VOC：标注导出为XML格式，一个图片文件对应一个XML文件，分别存放在image和annotation文件夹下，以压缩包的格式导出。
 
-![image-20220104232116866](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104232116866.png)
+![image-20220104232116866](./Screenshot/image-20220104232116866.png)
 
-![image-20220104232850347](C:\Users\MI\AppData\Roaming\Typora\typora-user-images\image-20220104232850347.png)
+![image-20220104232850347](./Screenshot/image-20220104232850347.png)
 
 
 ## :telephone_receiver: 联系我们
