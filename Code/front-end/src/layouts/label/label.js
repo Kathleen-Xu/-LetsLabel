@@ -92,7 +92,7 @@ const Label = () => {
       return;
     }
     let data = {
-      Email: "3190103367@zju.edu.cn",
+      Email: cookie.load("account"),
       TaskId: task.UID,
       ImageList: result.map((current) => ({
         UID: current.id,
