@@ -4,89 +4,126 @@ import clsx from 'clsx';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionActions from '@material-ui/core/AccordionActions';
 import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Chip from '@material-ui/core/Chip';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded';
+import SpellcheckRoundedIcon from '@material-ui/icons/SpellcheckRounded';
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
+import useStyles from "./styles";
+import PropTypes from "prop-types";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-  heading: {
-    fontSize: theme.typography.pxToRem(15),
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
-  },
-  icon: {
-    verticalAlign: 'bottom',
-    height: 20,
-    width: 20,
-  },
-  details: {
-    alignItems: 'center',
-  },
-  column: {
-    flexBasis: '33.33%',
-  },
-  helper: {
-    borderLeft: `2px solid ${theme.palette.divider}`,
-    padding: theme.spacing(1, 2),
-  },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-  },
-}));
+import SingleLineImageList from "../ImageList/ImageList";
+import {Divider} from "@material-ui/core";
 
-export default function DetailedAccordion() {
+export default function TaskCard(props) {
   const classes = useStyles();
-
+  const info = props.info;
+  const self = props.check;
+  function toLabel() {
+    props.labelFuc();
+  }
+  function toExport() {
+    props.exprotFuc(info.UID);
+  }
+  function toCheck() {
+    props.checkFuc(info.UID);
+  }
   return (
-    <div className={classes.root}>
+    <Card variant="outlined" className={classes.root}>
       <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1c-content"
           id="panel1c-header"
         >
-          <div className={classes.column}>
-            <Typography className={classes.heading}>Location</Typography>
+          <div className={classes.columnEdge}>
+            {info.IsSubmitted && (
+              <div className={classes.icon}>
+                {info.IsPassed === "good" && <CheckCircleOutlineIcon />}
+                {info.IsPassed === "bad" && <HighlightOffRoundedIcon />}
+                {info.IsPassed === "pending" && <SpellcheckRoundedIcon />}
+              </div>
+            )}
           </div>
-          <div className={classes.column}>
-            <Typography className={classes.secondaryHeading}>Select trip destination</Typography>
+          <div className={classes.realSummary}>
+            <div className={classes.row}>
+              <div className={classes.column}>
+                <Typography className={classes.heading}>任务名：{info.Name}</Typography>
+              </div>
+              <div className={classes.column}>
+                <Typography className={classes.secondaryHeading}>发布人：{info.Owner}</Typography>
+              </div>
+              <div className={classes.column}>
+                <Typography className={classes.secondaryHeading}>发布时间：{info.PostTime}</Typography>
+              </div>
+              <div className={classes.columnEdge}>
+                {!info.IsSubmitted &&
+                  <Button
+                    onClick={toLabel}
+                    variant="outlined">
+                    标注
+                  </Button>}
+                { info.IsSubmitted && self
+                  && info.IsPassed === "pending"
+                  &&
+                    <Button
+                      onClick={toCheck}
+                      variant="outlined"
+                    >
+                      复核
+                    </Button>
+                }
+              </div>
+            </div>
+            {info.IsSubmitted && (
+              <Divider
+                variant="middle"
+                orientation="horizontal"
+                className={classes.divider}
+              />
+            )}
+            {info.IsSubmitted && (
+              <div className={classes.row}>
+                <div className={classes.column}>
+                  <Typography className={classes.heading}>已提交</Typography>
+                </div>
+                <div className={classes.column}>
+                  <Typography className={classes.secondaryHeading}>提交人：{info.Submitter}</Typography>
+                </div>
+                <div className={classes.column}>
+                  <Typography className={classes.secondaryHeading}>
+                    复核结果：
+                    {info.IsPassed === "good" && "复核通过"}
+                    {info.IsPassed === "bad" && "复核不通过"}
+                    {info.IsPassed === "pending" && "暂未复核"}
+                  </Typography>
+                </div>
+                <div className={classes.columnEdge}>
+                  <Button
+                    onClick={toExport}
+                    variant="outlined"
+                  >
+                    导出
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </AccordionSummary>
         <AccordionDetails className={classes.details}>
-          <div className={classes.column} />
-          <div className={classes.column}>
-            <Chip label="Barbados" onDelete={() => {}} />
-          </div>
-          <div className={clsx(classes.column, classes.helper)}>
-            <Typography variant="caption">
-              Select your destination of choice
-              <br />
-              <a href="#secondary-heading-and-columns" className={classes.link}>
-                Learn more
-              </a>
-            </Typography>
-          </div>
+          <SingleLineImageList imgList={info.Img} />
         </AccordionDetails>
-        <Divider />
-        <AccordionActions>
-          <Button size="small">Cancel</Button>
-          <Button size="small" color="primary">
-            Save
-          </Button>
-        </AccordionActions>
       </Accordion>
-    </div>
+    </Card>
   );
 }
+
+TaskCard.propTypes = {
+  info: PropTypes.object,
+  labelFuc: PropTypes.func,
+  exportFuc: PropTypes.func,
+  check: PropTypes.bool,
+  checkFuc: PropTypes.func,
+};

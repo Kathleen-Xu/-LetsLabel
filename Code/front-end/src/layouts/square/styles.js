@@ -4,6 +4,7 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    margin: "0 10%",
   },
   title: {
     width: "100%",
@@ -12,7 +13,18 @@ const useStyles = makeStyles(() => ({
     fontFamily: "Noto Sans SC, sans-serif",
   },
   divider: {
-    width: "80%",
+    width: "100%",
+    marginBottom: "10px",
+  },
+  form_head: {
+    textAlign: "center",
+    padding: "20px 24px 0",
+  },
+  form_content: {
+    padding: "8px 24px 20px",
+  },
+  form_button: {
+    marginTop: "0.5em",
   },
 }));
 export default useStyles;

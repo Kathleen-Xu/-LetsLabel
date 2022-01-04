@@ -9,6 +9,7 @@ import {
 import Square from "./layouts/square/square.js";
 import Post from "./layouts/post/post.js";
 import Submit from "./layouts/submit/submit.js";
+import Label from "./layouts/label/label.js";
 
 // components
 import Navbar from "./components/Navbar/navbar";
@@ -28,6 +29,7 @@ function Admin() {
           <Route path="/" element={<Square />} />
           <Route path="/post" element={<Post />} />
           <Route path="/submit" element={<Submit />} />
+          <Route path="/label" element={<Label />} />
         </Routes>
       </BrowserRouter>
     </div>

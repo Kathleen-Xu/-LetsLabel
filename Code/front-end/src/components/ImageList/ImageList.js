@@ -30,11 +30,11 @@ export default function SingleLineImageList(props) {
   return (
     <div className={classes.root}>
       <ImageList className={classes.imageList} cols={2.5}>
-        {itemData.map((item) => (
-          <ImageListItem key={item.url}>
-            <img src={item.url} alt={item.name} />
+        {itemData.map((item, index) => (
+          <ImageListItem key={index} className={classes.image}>
+            <img src={item.Url} alt={item.Name} className={classes.svg}/>
             <ImageListItemBar
-              title={item.name}
+              title={item.Name}
               classes={{
                 root: classes.titleBar,
                 title: classes.title,

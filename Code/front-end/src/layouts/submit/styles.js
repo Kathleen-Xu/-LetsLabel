@@ -1,23 +1,30 @@
 import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
-  logo: {
-    maxWidth: "120px",
-    maxHeight: "90px",
-    margin: "-10px 10px 0 0",
-  },
   root: {
-    margin: "0 0 0 20px",
     display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    margin: "0 10%",
   },
-  main: {
-    marginLeft: "25px",
+  title: {
+    width: "100%",
+    fontWeight: "600",
+    margin: "40px 55px 10px",
+    fontFamily: "Noto Sans SC, sans-serif",
   },
-  searchForm: {
-    width: "800px",
-    padding: "12px 0 0 0",
+  divider: {
+    width: "100%",
+    marginBottom: "10px",
   },
-  list: {
-    width: "800px",
+  form_head: {
+    textAlign: "center",
+    padding: "20px 24px 0",
+  },
+  form_content: {
+    padding: "8px 24px 20px",
+  },
+  form_button: {
+    marginTop: "0.5em",
   },
 }));
 export default useStyles;

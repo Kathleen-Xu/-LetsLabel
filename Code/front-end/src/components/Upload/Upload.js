@@ -5,11 +5,12 @@ import React from "react";
 const CLOUDINARY_UPLOAD_PRESET = 'zerxsi3i';
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/xklfire/upload';
 
-function Upload() {
+export default function Upload() {
   const [url, setUrl] = React.useState();
   const [fileList, setFileList] = React.useState([]);
   function onImageDrop(files) {
     setFileList(files);
+    console.log(files);
     let upload = request.post(CLOUDINARY_UPLOAD_URL)
       .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
       .field('file', files[0]);

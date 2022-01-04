@@ -43,7 +43,7 @@ const Navbar = () => {
   });
   const [openProfile, setOpenProfile] = React.useState(false);
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [remember, setRemember] = React.useState(cookie.load("remember"));
+  const [remember, setRemember] = React.useState(cookie.load("remember") ? cookie.load("remember") === "true" : false);
   const initialFormState = {
     email: cookie.load("account") ? cookie.load("account") : "",
     password:
@@ -96,6 +96,8 @@ const Navbar = () => {
     cookie.remove("username", { path: "/" });
     setSnackbar({ ...snackbar, logOut: true });
     setAccount({ ...account, email: "", username: "" });
+    navigate("/");
+    window.location.reload();
   };
   const handleSubmitLogin = () => {
     let ec = "";
@@ -138,6 +140,8 @@ const Navbar = () => {
       } else {
         cookie.remove("password", { path: "/" });
       }
+      navigate("/");
+      window.location.reload();
     } else {
       if (res.data === "密码错误") {
         pc = "密码错误。";
@@ -167,7 +171,7 @@ const Navbar = () => {
     if (formData.username === "") {
       uc = "用户名不能为空。";
     } else if (
-      !/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/.test(formData.username)
+      !/^[0-9A-Za-z]{6,20}$/.test(formData.username)
     ) {
       uc = "用户名格式错误。";
     }
@@ -191,6 +195,7 @@ const Navbar = () => {
   };
   async function register() {
     let ec = "";
+    let uc = "";
     let data = {
       Name: formData.username,
       Password: formData.password,
@@ -200,7 +205,14 @@ const Navbar = () => {
     let res = await axios.post(`${server}/register/`, data);
     if (res.data === "注册成功！") {
       setSnackbar({ ...snackbar, regDone: true });
+      cookie.remove("account", { path: "/" });
       handleToLogin();
+    } else if (res.data === "用户名已被占用") {
+      uc = "用户名已被占用。";
+      setFormData({
+        ...formData,
+        username_check: uc,
+      });
     } else {
       ec = "该邮箱已被注册。";
       setFormData({
@@ -247,7 +259,7 @@ const Navbar = () => {
           <Button
             className={classes.button}
             onClick={() => { navigate("/submit"); }}>
-            我领取的
+            我提交的
           </Button>
         </ButtonGroup>
       </div>

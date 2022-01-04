@@ -47,21 +47,23 @@ def fetchTask(request):
         taskOb = models.Task.objects.get(PID=task['PID'])
         imgList = list(taskOb.Img.values().all())
         if task['IsSubmitted']:
-            submitter = User.objects.values().filter(PID=task['Submitter']).first()
+            submitter = taskOb.Submitter.values().first()
             taskDict = {
                 'UID': str(task['PID']),
                 'Name': task['Name'], 
                 'Owner': task['Owner'],
-                'PostTime': task['PostTime'],
+                'PostTime': task['PostTime'].strftime('%Y-%m-%d'),
                 'IsSubmitted': task['IsSubmitted'],
-                'Submitter': submitter['Name'],
+                'Submitter': submitter['Email'],
                 'IsPassed': task['IsPassed']
             }
             for img in imgList:
                 imgDict = {
                     'UID': str(img['PID']),
-                    'Name': img['Name'], 
-                    'Url': img['Url']
+                    'Name': img['Name'],
+                    'Url': img['Url'],
+                    'Width': float(img['Width']),
+                    'Height': float(img['Height'])
                 }
                 anttRes = []
                 imgOb = models.Image.objects.get(PID=img['PID'])
@@ -70,10 +72,10 @@ def fetchTask(request):
                     anttRes.append({
                         'UID': str(antt['PID']),
                         'Name': antt['Name'],
-                        'Xmin': antt['Xmin'],
-                        'Ymin': antt['Ymin'],
-                        'Xmax': antt['Xmax'],
-                        'Ymax': antt['Ymax']
+                        'Xmin': float(antt['Xmin']),
+                        'Ymin': float(antt['Ymin']),
+                        'Xmax': float(antt['Xmax']),
+                        'Ymax': float(antt['Ymax'])
                     })
                 imgDict['Annotation']=anttRes
                 imgRes.append(imgDict)
@@ -94,7 +96,7 @@ def fetchTask(request):
                     'Url': img['Url'],
                 })
 
-        taskDict['Img']=imgRes;
+        taskDict['Img']=imgRes
         res.append(taskDict)
     return HttpResponse(json.dumps(res))
 
@@ -107,10 +109,12 @@ def submit(request):
     taskOb.IsSubmitted = True
     taskOb.save()
     for item in data['ImageList']:
+        models.Image.objects.filter(PID=uuid.UUID(item['UID'])).update(Width=item['Weight'], Height=item['Height'])
         imgOb = models.Image.objects.get(PID=uuid.UUID(item['UID']))
-        imgOb.Weight = item['Weight']
-        imgOb.Height = item['Height']
-        imgOb.save()
+#         imgOb.Weight = item['Weight']
+#         imgOb.save()
+#         imgOb.Height = item['Height']
+#         imgOb.save()
         for i in item['Annotation']:
             antt = models.Annotation.objects.create(
                 PID=uuid.uuid4(), 

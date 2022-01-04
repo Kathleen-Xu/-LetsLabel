@@ -19,14 +19,19 @@ export const theme = createTheme({
       main: "#3ebeab",
     },
   },
-  components: {
-    SpeedDial: {
-      styleOverrides: {
-        fab: {
-          backgroundColor: "#004c40",
-        },
+  overrides: {
+    MuiDropzoneArea: {
+      root: {
+        minHeight: "150px",
       },
     },
   },
+  /*components: {
+    MuiDropzoneArea: {
+      styleOverrides: {
+
+      },
+    },
+  },*/
 
 });
