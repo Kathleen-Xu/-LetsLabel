@@ -14,7 +14,7 @@
     "file-saver": "^2.0.5",
     "jszip": "^3.7.1",
     "material-ui-dropzone": "^3.5.0",
-    "qiniu": "^7.4.0",
+    "qiniu-js": "^3.4.0",
     "react": "^17.0.2",
     "react-cookies": "^0.1.1",
     "react-dom": "^17.0.2",
@@ -23,6 +23,7 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
     "superagent": "^6.1.0",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.1.2",
     "xmlbuilder": "^15.1.1"
   },

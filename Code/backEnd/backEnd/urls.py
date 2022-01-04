@@ -25,6 +25,7 @@ urlpatterns = [
     path('register/',user_view.register),
     path('login/',user_view.login),
     path('getusername/',user_view.getUserName),
+    path('gettoken/',user_view.getToken),
     path('post/',task_view.postTask),
     path('fetch/',task_view.fetchTask),
     path('submit/',task_view.submit),

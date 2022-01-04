@@ -21,6 +21,7 @@ import request from "superagent";
 import cookie from "react-cookies";
 import {saveJSON, saveXML} from "../../helpers/downloadFile";
 import blobToFile, {base64ToFile} from "../../helpers/base64ToFile";
+import doUpload from "../../helpers/doUpload";
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 const server = "http://127.0.0.1:8000";
@@ -73,7 +74,7 @@ const Post = () => {
           let n = 0;
           for (let x = 0; x < data.base64Frames.length; x++) {
             console.log(x);
-            base64ToFile(data.base64Frames[x], current.name + "/" + x).then(function (res) {
+            base64ToFile(data.base64Frames[x], current.name + "_" + x + ".jpg").then(function (res) {
               tmp = [...tmp, res];
               if (++n === data.base64Frames.length) {
                 resolve(tmp);
@@ -234,10 +235,24 @@ const Post = () => {
       return;
     }
     let tmp = [];
-    setTip("图片上传至Cloudinary...");
+    setTip("图片上传至七牛云...");
     let count = 0;
     imgList.forEach((current, index) => {
-      request.post(CLOUDINARY_UPLOAD_URL)
+      let pr = new Promise(function (resolve, reject) {
+        doUpload(current).then( (url) => {
+          console.log(url);
+          tmp = [...tmp, {name: current.name, url: url}];
+          count++;
+          if (count === imgList.length) {
+            resolve(tmp);
+          }
+        });
+      }).then(function (t) {
+        console.log(t);
+        realPost(t);
+      });
+    });
+      /*request.post(CLOUDINARY_UPLOAD_URL)
         .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
         .field('file', current).end((err, response) => {
           if (err) {
@@ -255,8 +270,7 @@ const Post = () => {
               realPost(tmp);
             }
           }
-      });
-    });
+      });*/
   }
   async function realPost(tmp) {
     let data = {
